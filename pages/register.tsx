@@ -1,7 +1,5 @@
-"use client"; // <-- Assurez-vous que ce fichier est un composant Client
-
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 
 export default function Register() {
   const { data: session } = useSession();
@@ -22,12 +20,13 @@ export default function Register() {
     phone: "",
   });
 
-  const handleChange = (e) => {
+  // Typing for the change event
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   // Function to get the coordinates of an address
-  async function getCoordinates(address) {
+  async function getCoordinates(address: string) {
     const response = await fetch(
       `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
         address
@@ -44,7 +43,12 @@ export default function Register() {
   }
 
   // Haversine formula to calculate distance between two geographic points
-  function calculateDistance(lat1, lon1, lat2, lon2) {
+  function calculateDistance(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) {
     const R = 6371; // Earth's radius in kilometers
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -59,7 +63,8 @@ export default function Register() {
     return distance;
   }
 
-  const handleSubmit = async (e) => {
+  // Typing for the submit event
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const address = formData.address;
 
@@ -77,7 +82,7 @@ export default function Register() {
 
       if (distance <= 50) {
         // The address is valid and within 50 km of Paris
-        alert("Adresse valide");
+        console.log("Adresse valide");
         // Proceed with registration logic here
       } else {
         alert("L'adresse doit être située à moins de 50 km de Paris.");
@@ -183,7 +188,7 @@ export default function Register() {
                         />
                       </div>
                       <button type="submit" className="btn btn-primary">
-                        S'inscrire
+                        S&apos;inscrire
                       </button>
                     </form>
                   </div>
